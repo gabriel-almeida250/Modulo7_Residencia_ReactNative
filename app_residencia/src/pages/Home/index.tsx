@@ -1,18 +1,17 @@
-import React, { useEffect, useState } from 'react';
-import { StyleSheet, ScrollView, View, TouchableOpacity } from 'react-native';
+import React, { useContext, useEffect, useState } from 'react';
+import { StyleSheet, ScrollView, View, TouchableOpacity,ActivityIndicator } from 'react-native';
 import { Card, Text } from 'react-native-elements';
 import AxiosInstance from '../../api/AxiosInstance';
+import { AutenticacaoContext } from '../../context/AutenticacaoContext'
+import { CategoriaType } from '../../models/@types/CategoriaTypes';
 
-type CategoriaType = {
-  idCategoria: number;
-  nomeCategoria: string;
-  nomeImagem: string;
-}
 
-const Home = ({ route, navigation }) => {
+
+const Home = ({ navigation }) => {
   //console.log('Token: ' + token);
-  const { token } = route.params;
+  const { usuario } = useContext(AutenticacaoContext);
   const [categoria, setCategoria] = useState<CategoriaType[]>([]);
+  
 
   useEffect(() => {
     getDadosCategoria();
@@ -21,7 +20,7 @@ const Home = ({ route, navigation }) => {
   const getDadosCategoria = async () => {
     AxiosInstance.get(
       `/categoria`,
-      { headers: { "Authorization": `Bearer ${token}` } }
+      { headers: { "Authorization": `Bearer ${usuario.token}` } }
     ).then(result => {
       console.log('Dados das categorias: ' + JSON.stringify(result.data));
       setCategoria(result.data);
@@ -36,8 +35,10 @@ const Home = ({ route, navigation }) => {
         {
           categoria.map((k, i)=> (
           <TouchableOpacity key={i}
+          
             onPress={() => console.log(`Categoria ${k.nomeCategoria} foi clicada`)}
             style={styles.botao_categoria}
+            
             >
             <View style={styles.view_itens_categoria}>
               <Text style={styles.texto_nome_categoria}>{k.nomeCategoria}</Text>

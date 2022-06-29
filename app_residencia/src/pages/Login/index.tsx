@@ -1,16 +1,22 @@
-import React, {useState} from 'react';
+import React, {useState, useContext} from 'react';
 import {View, StyleSheet, TouchableOpacity, Alert} from 'react-native';
 import {Text, Input, Icon, Button} from 'react-native-elements';
-import { LoginService } from '../../services/LoginService';
+import AppLoader from '../../components/AppLoader';
+import { AutenticacaoContext } from '../../context/AutenticacaoContext';
 
 const Login = ({navigation}) => {
   const [email, setEmail] = useState('');
   const [senha, setSenha] = useState('');
+  const [loading, setLoading] = useState(false)
+
+
+  const { login } = useContext(AutenticacaoContext);
 
   const handleLogin = async (email:string, senha:string) => {
+    setLoading(true)
     console.log(`Email: ${email} - Senha: ${senha}`);
 
-    const responseLogin = await LoginService(email, senha);
+    const responseLogin = await login(email, senha);
     if (!responseLogin) {
       Alert.alert(
         "Erro",
@@ -21,20 +27,13 @@ const Login = ({navigation}) => {
       ]
       );
     } else {
-      navigation.navigate('Home', {
-        screen: 'TabNavigationScreen',
-        params: {
-          screen: 'HomeTab',
-          params: {
-            token: responseLogin.token,
-          }
-        },
-      });
+      setLoading(false)
+      navigation.navigate('Home');
     }
-
   };
 
   return (
+    <>
     <View style={styles.container}>
       <Text style={styles.texto_entrada}>{'Bem-vindo'}</Text>
       <Input
@@ -56,6 +55,7 @@ const Login = ({navigation}) => {
         }
         inputStyle={styles.inputs}
         placeholderTextColor={'red'}
+        secureTextEntry
       />
       <TouchableOpacity style={styles.hoverDiferente}>
       <Button
@@ -65,6 +65,8 @@ const Login = ({navigation}) => {
         buttonStyle={styles.botaostyle}
       /></TouchableOpacity>
     </View>
+    <AppLoader visible={loading}/>
+    </>
   );
 };
 const styles = StyleSheet.create({
