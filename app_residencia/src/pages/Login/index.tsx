@@ -1,5 +1,5 @@
 import React, {useState, useContext} from 'react';
-import {View, StyleSheet, TouchableOpacity, Alert} from 'react-native';
+import {View, StyleSheet, Alert, TouchableWithoutFeedback, Keyboard, FlatList} from 'react-native';
 import {Text, Input, Icon, Button} from 'react-native-elements';
 import AppLoader from '../../components/AppLoader';
 import { AutenticacaoContext } from '../../context/AutenticacaoContext';
@@ -8,12 +8,15 @@ const Login = ({navigation}) => {
   const [email, setEmail] = useState('');
   const [senha, setSenha] = useState('');
   const [loading, setLoading] = useState(false)
+  
 
 
   const { login } = useContext(AutenticacaoContext);
 
   const handleLogin = async (email:string, senha:string) => {
     setLoading(true)
+    Keyboard.dismiss()
+
     console.log(`Email: ${email} - Senha: ${senha}`);
 
     const responseLogin = await login(email, senha);
@@ -57,18 +60,21 @@ const Login = ({navigation}) => {
         placeholderTextColor={'red'}
         secureTextEntry
       />
-      <TouchableOpacity style={styles.hoverDiferente}>
+      <TouchableWithoutFeedback style={styles.hoverDiferente}>
       <Button
         title="Entrar"
         onPress={() => handleLogin(email, senha)}
         titleStyle={styles.titulobotao}
         buttonStyle={styles.botaostyle}
-      /></TouchableOpacity>
+      />
+      </TouchableWithoutFeedback>
+     
     </View>
     <AppLoader visible={loading}/>
     </>
   );
 };
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,
