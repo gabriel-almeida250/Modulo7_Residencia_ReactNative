@@ -6,7 +6,7 @@ const Categories = () => {
     return (
         <View style={styles.container}>
             <Text>
-
+            
             </Text>
         </View>
     )

@@ -1,20 +1,26 @@
-import React, { useContext, useEffect, useState } from 'react';
-import { StyleSheet, ScrollView, View, TouchableOpacity,ActivityIndicator } from 'react-native';
-import { Card, Text } from 'react-native-elements';
-import { FlatList, TextInput } from 'react-native-gesture-handler';
+import React, {useContext, useEffect, useState} from 'react';
+import {
+  StyleSheet,
+  ScrollView,
+  View,
+  TouchableOpacity,
+  ActivityIndicator,
+} from 'react-native';
+import {Card, Text} from 'react-native-elements';
+import {FlatList, TextInput} from 'react-native-gesture-handler';
 import AxiosInstance from '../../api/AxiosInstance';
-import { AutenticacaoContext } from '../../context/AutenticacaoContext'
-import { CategoriaType } from '../../models/@types/CategoriaTypes';
-import { ProdutoType } from '../../models/@types/ProdutoTypes';
+import {AutenticacaoContext} from '../../context/AutenticacaoContext';
+import {CategoriaType} from '../../models/@types/CategoriaTypes';
+import {ProdutoType} from '../../models/@types/ProdutoTypes';
 import {Icon} from 'react-native-elements';
+import BarraPesquisa from '../../components/BarraPesquisa';
 
-const Home = ({ navigation }) => {
-  const { usuario } = useContext(AutenticacaoContext);
-  const [loading, setLoading] = useState(false)
+const Home = ({navigation}) => {
+  const {usuario} = useContext(AutenticacaoContext);
+  //const [loading, setLoading] = useState(false)
   const [categoria, setCategoria] = useState<CategoriaType[]>([]);
   const [produto, setProduto] = useState<ProdutoType[]>([]);
   const [text, setText] = useState('');
-
 
   useEffect(() => {
     getDadosCategoria();
@@ -22,92 +28,86 @@ const Home = ({ navigation }) => {
   }, []);
 
   const getDadosCategoria = async () => {
-    setLoading(true)
-    AxiosInstance.get(
-      `/categoria`,
-      { headers: { "Authorization": `Bearer ${usuario.token}` } }
-    ).then(result => {
-      console.log('Dados das categorias: ' + JSON.stringify(result.data));
-      setCategoria(result.data);
-     setLoading(false)
-    }).catch((error) => {
-      console.log("Erro ao carregar a lista de categorias - " + JSON.stringify(error));
-    });
-  }
+    //setLoading(true)
+    AxiosInstance.get(`/categoria`, {
+      headers: {Authorization: `Bearer ${usuario.token}`},
+    })
+      .then(result => {
+        console.log('Dados das categorias: ' + JSON.stringify(result.data));
+        setCategoria(result.data);
+        //setLoading(false)
+      })
+      .catch(error => {
+        console.log(
+          'Erro ao carregar a lista de categorias - ' + JSON.stringify(error),
+        );
+      });
+  };
 
   const getDadosProduto = async () => {
-    AxiosInstance.get(
-      `/produto`,
-      { headers: { "Authorization": `Bearer ${usuario.token}` } }
-    ).then(result => {
-      console.log('Dados das produtos: ' + JSON.stringify(result.data));
-      setProduto(result.data);
-    }).catch((error) => {
-      console.log("Erro ao carregar a listar produtos - " + JSON.stringify(error));
-    });
+    AxiosInstance.get(`/produto`, {
+      headers: {Authorization: `Bearer ${usuario.token}`},
+    })
+      .then(result => {
+        console.log('Dados das produtos: ' + JSON.stringify(result.data));
+        setProduto(result.data);
+      })
+      .catch(error => {
+        console.log(
+          'Erro ao carregar a listar produtos - ' + JSON.stringify(error),
+        );
+      });
+  };
+
+  function ListProduto({produto}) {
+    return (
+      <Card containerStyle={styles.card_style}>
+        <Card.Image source={{uri: produto.imagemProduto}}></Card.Image>
+        <Card.Divider />
+        <Card.Title style={styles.titulo_cards}>
+          {produto.nomeProduto}
+        </Card.Title>
+        <Text style={styles.descricao_cards}>{produto.descricaoProduto}</Text>
+      </Card>
+    );
   }
 
-  function ListProduto({ produto }){
+  function ListCategoria({categoria}) {
     return (
-             <Card containerStyle={styles.card_style}>
-            <Card.Image source={{uri:produto.imagemProduto}}></Card.Image>
-             <Card.Divider />
-             <Card.Title style={styles.titulo_cards}>{produto.nomeProduto}</Card.Title>
-             <Text style={styles.descricao_cards}>{produto.descricaoProduto}</Text>
-           </Card>
-    )
-  }
-
-  function ListCategoria({ categoria }){
-    return (
-            <View style={styles.view_itens_categoria}>
-              <Text style={styles.texto_nome_categoria}>{categoria.nomeCategoria}</Text>
-            </View>
-    )
+      <View style={styles.view_itens_categoria}>
+        <Text style={styles.texto_nome_categoria}>
+          {categoria.nomeCategoria}
+        </Text>
+      </View>
+    );
   }
 
   return (
-    <ScrollView style={styles.container} >
-      <View style={styles.cabecalho}>
-      <TextInput 
-      style={styles.input}
-      placeholder='Pesquisar'
-      autoCapitalize='none'
-      autoCorrect={false}
-      value={text}
-      onChangeText={(value) => setText(value)}
-      />
-      <Icon 
-      name="search" 
-      color="red" 
-      type="ionocons" 
-      size={40} 
-      onPress={() =>{}}
-      />
-      </View>
-        <FlatList 
+    <ScrollView style={styles.container}>
+      <BarraPesquisa navigation={navigation} />
+      <FlatList
         data={categoria}
         keyExtractor={(item, index) => String(item.idCategoria)}
-        renderItem={({ item }) => <ListCategoria  categoria={item} />}
-        horizontal={true}     
+        renderItem={({item}) => <ListCategoria categoria={item} />}
+        horizontal={true}
         //
-        onEndReached={getDadosCategoria}
-        onEndReachedThreshold={0.1}
-        ListFooterComponent={ <FooterList load={loading}/>}
+        //onEndReached={getDadosCategoria}
+        //onEndReachedThreshold={0.1}
+        //ListFooterComponent={ <FooterList load={loading}/>}
         //
-        /> 
+      />
       <Text>{'Recentes'}</Text>
-      <FlatList 
+      <FlatList
         data={produto}
         keyExtractor={(item, index) => String(item.idProduto)}
-        renderItem={({ item }) => <ListProduto  produto={item} />}
-        horizontal={true}     
+        renderItem={({item}) => <ListProduto produto={item} />}
+        horizontal={true}
         //
-        onEndReached={getDadosProduto}
-        onEndReachedThreshold={0.1}
-        ListFooterComponent={ <FooterList load={loading}/>}
+        //onEndReached={getDadosProduto}
+        //onEndReachedThreshold={0.1}
+        //ListFooterComponent={ <FooterList load={loading}/>}
         //
-        />
+      />
       <Card>
         <Card.Image source={require('../../assets/img.strogonoff.jpg')} />
         <Card.Divider />
@@ -118,14 +118,14 @@ const Home = ({ navigation }) => {
   );
 };
 
-function FooterList({load}) {
-  if (!load) return null;
-  return(
-    <View style={styles.loading}>
-      <ActivityIndicator size={25} color='red' />
-    </View>
-  )
-}
+// function FooterList({load}) {
+//   if (!load) return null;
+//   return(
+//     <View style={styles.loading}>
+//       <ActivityIndicator size={25} color='red' />
+//     </View>
+//   )
+// }
 
 const styles = StyleSheet.create({
   container: {
@@ -152,16 +152,17 @@ const styles = StyleSheet.create({
     color: 'white',
     textAlign: 'center',
   },
-  loading:{
+  loading: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    padding: 10
-  }, card_style: {
+    padding: 10,
+  },
+  card_style: {
     backgroundColor: 'pink',
     padding: 0,
     marginBottom: 20,
-    width: 125,
+    width: 140,
     borderRadius: 5,
     borderWidth: 0,
   },
@@ -180,18 +181,6 @@ const styles = StyleSheet.create({
     fontSize: 16,
     textAlign: 'center',
     color: '#181717',
-  },
-  cabecalho: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-  },
-  input: {
-    flex: 1,
-    backgroundColor: 'red',
-    borderRadius: 25,
-    fontSize: 20,
-    paddingHorizontal: 20,
-    marginBottom: 10
   }
 });
 
