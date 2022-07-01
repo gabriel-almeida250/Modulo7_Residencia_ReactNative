@@ -9,6 +9,7 @@ import Login from "../pages/Login";
 import Categories from "../pages/Categories";
 import { renderNode } from "react-native-elements/dist/helpers";
 import { ProdutoCategoria } from "../pages/ProdutoCategoria";
+import Produto from "../pages/Produto";
 
 const TabNavigation = createBottomTabNavigator();
 const BottomTabNavigator = () => {
@@ -33,11 +34,11 @@ const BottomTabNavigator = () => {
         tabBarShowLabel:false
       })}
       tabBarOptions={{
-        activeTintColor: '#9C27B0',
-        inactiveTintColor: '#ff0000',
+        activeTintColor: '#000000',
+        inactiveTintColor: '#000000',
       }}>
       <TabNavigation.Screen name="HomeTab" component={Home} options={{ tabBarStyle:{
-        backgroundColor:'pink',
+        backgroundColor:'red',
       }}}/>
       <TabNavigation.Screen name="CategoriesScreen" component={Categories} />
     </TabNavigation.Navigator>
@@ -53,15 +54,24 @@ const NavigationDrawer = () => {
       name='TabNavigationScreen' 
       component={BottomTabNavigator}
       options={{ title: 'Home Principal' , 
+      headerTintColor: 'black',
+      drawerStyle:{
+        backgroundColor: 'red'
+      },
+      drawerActiveTintColor: 'green',
+      drawerInactiveTintColor: 'pink',
       headerStyle:{
         backgroundColor: 'red',
-        
       } }}
+  
       />
       <DrawerNavigation.Screen
       name='CategoriaDrawerScreen'
       component={Categories}
-      options={{ title: 'Categories'}}
+      options={{ title: 'Categories', 
+      drawerActiveTintColor: 'green',
+      drawerInactiveTintColor: 'pink',
+    }}
       />
     </DrawerNavigation.Navigator>
   )
@@ -84,8 +94,18 @@ const Routes = () => {
           options={{headerShown: false}}
         />
          <StackNavigation.Screen
+          name="Categories"
+          component={Categories}
+          options={{headerShown: false}}
+        />
+        <StackNavigation.Screen
           name="ProdutoCategoriaScreen"
           component={ProdutoCategoria}
+          options={{headerShown: true, title:'Produto Categoria'}}
+        />
+         <StackNavigation.Screen
+          name="ProdutoScreen"
+          component={Produto}
           options={{headerShown: true, title:'Produto Categoria'}}
         />
       </StackNavigation.Navigator>

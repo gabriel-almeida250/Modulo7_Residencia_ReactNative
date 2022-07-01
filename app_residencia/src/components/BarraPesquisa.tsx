@@ -1,6 +1,14 @@
 import React, {useState, useEffect, useContext} from 'react';
-import {StatusBar, View, TextInput, FlatList, StyleSheet, Alert} from 'react-native';
-import {Text} from 'react-native-elements';
+import {
+  StatusBar,
+  View,
+  TextInput,
+  FlatList,
+  StyleSheet,
+  Alert,
+  Keyboard
+} from 'react-native';
+import {Icon, Text} from 'react-native-elements';
 import {ScrollView} from 'react-native-gesture-handler';
 import AxiosInstance from '../api/AxiosInstance';
 import {AutenticacaoContext} from '../context/AutenticacaoContext';
@@ -10,16 +18,16 @@ import {CategoriaType} from '../models/@types/CategoriaTypes';
 export default function BarraPesquisa(props) {
   const [pesquisa, setPesquisa] = useState('');
   const [categoria, setCategoria] = useState<CategoriaType[]>([]);
-  const [loading, setLoading] = useState(false)
   const {usuario} = useContext(AutenticacaoContext);
   const pesquisar = usePesquisar();
 
-  const selecionaPesquisa = async (categoria: any) => {
+  const selecionaPesquisa = (categoria: any) => {
     pesquisar.Buscar(categoria);
-    props.navigation.navigate('ProdutoCategoriaScreen')
+    props.navigation.navigate('ProdutoCategoriaScreen');
+    setPesquisa("")
     console.log('Categoria clicaca', pesquisar.pesquisa);
-  };
 
+  };
   useEffect(() => {
     getDadosCategoria();
   }, []);
@@ -42,13 +50,15 @@ export default function BarraPesquisa(props) {
 
   return (
     <View style={{marginBottom: 20}}>
-      <TextInput 
-      placeholder="Pesquisar..." 
-      onChangeText={setPesquisa} 
-      autoCapitalize='none'
-      autoCorrect={false}
-      style={styles.input} 
-      />    
+      <View style={styles.searchSection}>
+        <Icon style={styles.searchIcon} name="search" size={20} color="#000" />
+        <TextInput
+          placeholder="Pesquisar..."
+          onChangeText={setPesquisa}
+          autoCorrect={false}
+          style={styles.input}
+        />
+      </View>
       <ScrollView contentContainerStyle={styles.MenuSanfona}>
         {categoria
           .filter(val => {
@@ -61,7 +71,11 @@ export default function BarraPesquisa(props) {
             }
           })
           .map((categoria, indice) => (
-            <Text onPress={e => selecionaPesquisa(categoria)} key={indice} style={{fontSize: 20,  padding: 20}}>
+            <Text
+              onPress={e => selecionaPesquisa(categoria)}
+              key={indice}
+              style={{fontSize: 15, padding: 20}}
+              >
               {categoria.nomeCategoria}
             </Text>
           ))}
@@ -71,17 +85,32 @@ export default function BarraPesquisa(props) {
 }
 
 const styles = StyleSheet.create({
-    input: {
-      flex: 1,
-      backgroundColor: 'red',
-      borderRadius: 25,
-      fontSize: 20,
-      paddingHorizontal: 20,
-      marginBottom: 10
-    },
-    MenuSanfona: {
-      backgroundColor: 'red',
-      borderRadius: 25,
-      justifyContent: 'center',
-    }
-  });
+  searchSection: {
+    flex: 1,
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#ff0000',
+    marginBottom: 10,
+    borderRadius: 20,
+  },
+  searchIcon: {
+    padding: 10,
+  },
+  input: {
+    flex: 1,
+    paddingTop: 10,
+    paddingRight: 10,
+    paddingBottom: 10,
+    paddingLeft: 0,
+    backgroundColor: '#ff0000',
+    color: '#ffffff',
+    borderRadius: 20,
+    
+  },
+  MenuSanfona: {
+    backgroundColor: 'red',
+    borderRadius: 25,
+    justifyContent: 'center',
+  },
+});
