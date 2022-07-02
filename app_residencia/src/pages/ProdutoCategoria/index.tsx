@@ -1,16 +1,15 @@
 import React, { useContext, useEffect, useState } from 'react';
-import { ActivityIndicator, FlatList, StatusBar, StyleSheet, Text, View } from 'react-native';
+import { ActivityIndicator, FlatList, StatusBar, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { Card } from 'react-native-elements';
-import { TouchableOpacity } from 'react-native-gesture-handler';
 import AxiosInstance from '../../api/AxiosInstance';
+import CardProduto from '../../components/CardProduto';
 import { AutenticacaoContext } from '../../context/AutenticacaoContext';
 import { usePesquisar } from '../../context/PesquisaContext';
 import { ProdutoType } from '../../models/@types/ProdutoTypes';
 
-export function ProdutoCategoria({route}) {
+const ProdutoCategoria = ({ navigation}) => {
 
   const [produto, setProduto] = useState<ProdutoType[]>([]);
-  const {navigation} = route.params;
   const [loading, setLoading] = useState(false)
   const [semProduto, setSemProduto] = useState(false)
   const {usuario} = useContext(AutenticacaoContext);
@@ -41,11 +40,9 @@ export function ProdutoCategoria({route}) {
     });
   }
 
-  function ListProduto( {produto} ){
-    
+  function ListProduto({produto}) {
     return (
-      <Text
-      onPress={() => {
+      <TouchableOpacity onPress={() => {
         navigation.navigate({
           name: 'ProdutoScreen',
           params: {
@@ -53,24 +50,10 @@ export function ProdutoCategoria({route}) {
           },
         });
       }}>
-      <Card
-      containerStyle={styles.card_style}>
-        <Card.Image
-          style={styles.imagens_cards}
-          source={{uri: produto.imagemProduto}}
-        />
-        <Card.Divider />
-        <Card.Title style={styles.titulo_cards}>
-          {produto.nomeProduto}
-        </Card.Title>
-        <Text style={styles.descricao_cards}>
-          {produto.descricaoProduto}
-        </Text>
-      </Card>
-    </Text>
-    )
+    <CardProduto dados={produto}/>
+    </TouchableOpacity>
+    );
   }
-
 
   return (
     <>
@@ -85,6 +68,10 @@ export function ProdutoCategoria({route}) {
         data={produto}
         keyExtractor={(item, index) => String(item.idProduto)}
         renderItem={({ item }) => <ListProduto  produto={item} />}
+        numColumns={2}
+        contentContainerStyle={{
+        marginTop:20 
+         }}
         // onEndReached={getDadosProduto}
         // onEndReachedThreshold={0.1}
         // ListFooterComponent={ <FooterList load={loading}/>}
@@ -115,20 +102,25 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#d68800',
-    padding: 30,
     justifyContent: 'center',
-    alignItems: 'center'
+    alignItems: 'center',
+    padding: 0,
+    margin: 0
+    
   },
   card_style: {
     backgroundColor: 'blue',
     padding: 0,
+    margin: 0,
     marginBottom: 20,
-    width: 260,
+    width: 110,
+    maxHeight: 400,
     borderRadius: 5,
     borderWidth: 0,
+    justifyContent: 'space-between'
   },
   imagens_cards: {
-    height: 300,
+    height: 200,
     borderRadius: 5,
 
   },
@@ -156,3 +148,5 @@ const styles = StyleSheet.create({
     marginBottom: 10
   }
 });
+
+export default ProdutoCategoria;

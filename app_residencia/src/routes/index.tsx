@@ -7,7 +7,7 @@ import { createDrawerNavigator } from '@react-navigation/drawer';
 import Home from "../pages/Home";
 import Login from "../pages/Login";
 import Categories from "../pages/Categories";
-import { ProdutoCategoria } from "../pages/ProdutoCategoria";
+import  ProdutoCategoria  from "../pages/ProdutoCategoria";
 import Produto from "../pages/Produto";
 import { SplashScreen } from "../pages/SplashScreen";
 import Carrinho from "../pages/Cart";

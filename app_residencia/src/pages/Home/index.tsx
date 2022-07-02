@@ -1,3 +1,4 @@
+import 'react-native-gesture-handler'
 import React, {useContext, useEffect, useState} from 'react';
 import {
   StyleSheet,
@@ -20,7 +21,7 @@ import { usePesquisar } from '../../context/PesquisaContext';
 
 const Home = ({navigation}) => {
   const {usuario} = useContext(AutenticacaoContext);
-  //const [loading, setLoading] = useState(false)
+  const [loading, setLoading] = useState(false)
   const [categoria, setCategoria] = useState<CategoriaType[]>([]);
   const [produto, setProduto] = useState<ProdutoType[]>([]);
 
@@ -51,7 +52,7 @@ const Home = ({navigation}) => {
       .then(result => {
         console.log('Dados das categorias: ' + JSON.stringify(result.data));
         setCategoria(result.data);
-        //setLoading(false)
+       //setLoading(false)
       })
       .catch(error => {
         console.log(
@@ -102,19 +103,18 @@ const Home = ({navigation}) => {
     barStyle="light-content"
     backgroundColor={styles.container.backgroundColor}
     />
-    <ScrollView style={styles.container}>
+    <ScrollView style={styles.container} >
+
       <BarraPesquisa navigation={navigation} />
-      <FlatList
+      <FlatList 
         data={categoria}
         keyExtractor={(item, index) => String(item.idCategoria)}
         renderItem={({item}) => <ListCategoria categoria={item} />}
         horizontal={true}
-        
-        //
+        //initialNumToRender={5}
         //onEndReached={getDadosCategoria}
-        //onEndReachedThreshold={0.1}
+        //onEndReachedThreshold={0.5}
         //ListFooterComponent={ <FooterList load={loading}/>}
-        //
       ></FlatList>
       <Text>{'Recentes'}</Text>
       <FlatList
@@ -143,165 +143,6 @@ const Home = ({navigation}) => {
     </>
   );
 };
-
-// import React, {useContext} from 'react';
-// import {
-//   StyleSheet,
-//   ScrollView,
-//   View,
-//   TouchableOpacity,
-//   FlatList,
-//   ActivityIndicator,
-// } from 'react-native';
-// import {Card, Text} from 'react-native-elements';
-// import {useEffect, useState} from 'react';
-// import AxiosInstance from '../../api/AxiosInstance';
-// import CardProduto from '../../components/cardProduto';
-// import {AutenticacaoContext} from '../../context/AutenticacaoContext';
-// import Loader from '../../components/Loader';
-// import BarraPesquisa from '../../components/BarraPesquisa';
-// import {Categoriatype} from '../../models/CategoriaType';
-// import { ProdutoType } from '../../models/ProdutoType';
-
-// const Home = ({navigation}) => {
-//   //console.log('Params:' + JSON.stringify(route));
-//   //console.log('token: ' + token);
-//   const {usuario} = useContext(AutenticacaoContext);
-//   console.log('Usuario: ' + JSON.stringify(usuario));
-//   const [categoria, setCategoria] = useState<Categoriatype[]>([]);
-//   const [produtos, setProdutos] = useState<ProdutoType[]>([]);
-//   const [carregando, setCarregando] = useState(true);
-//   const [loading, setLoading] = useState(false);
-
-//   useEffect(() => {
-//     getDadosCategoria();
-//     getProdutos();
-//   }, []);
-
-//   const getDadosCategoria = async () => {
-//     // setLoading(true);
-//     AxiosInstance.get(`/categoria`, {
-//       headers: {Authorization: `Bearer ${usuario.token}`},
-//     })
-//       .then(result => {
-//         //  console.log('Dados das categorias:' + JSON.stringify(result.data));
-//         setCategoria(result.data);
-//         // setLoading(false);
-//       })
-//       .catch(error => {
-//         console.log(
-//           'Erro ao carregar a lista de categoria - ' + JSON.stringify(error),
-//         );
-//       });
-//   };
-//   function ListCategoria({categoria}) {
-//     return (
-//          <Card containerStyle={styles.card_style}>
-//       <Card.Image
-//         style={styles.imagens_cards}
-//         source={{uri:categoria.nomeImagem}}
-//       />
-//       <Card.Title style={styles.texto_nome_categoria}>{categoria.nomeCategoria}</Card.Title>
-//     </Card>
-//     );
-//   }
-//   const getProdutos = async () => {
-//     // setLoading(true);
-//     AxiosInstance.get(`/produto`, {
-//       headers: {Authorization: `Bearer ${usuario.token}`},
-//     })
-//       .then(result => {
-//         console.log('Dados dos produtos:' + JSON.stringify(result.data));
-//         setProdutos(result.data);
-//         // setLoading(false);
-//       })
-//       .catch(error => {
-//         console.log(
-//           'Erro ao carregar a lista de produtos - ' + JSON.stringify(error),
-//         );
-//       });
-//   };
-//   function ListProduto({produtos}) {
-//     return <CardProduto navigation={navigation} dados={produtos} />;
-//   }
-//   setTimeout(() => {
-//     if (produtos && categoria) {
-//       setCarregando(false);
-//     }
-//   }, 2000);
-
-//   return (
-//     <ScrollView style={styles.container}>
-//       <BarraPesquisa navigation={navigation}/>
-//       {carregando && (
-//         <View style={styles.containerLoader}>
-//           <Loader cor="pink" />
-//           <Text style={styles.nomeLoader}>Carregando</Text>
-//         </View>
-//       )}
-//       {!carregando && (
-//         <View>
-//           <Text style={styles.titulo_secao}>{'Categorias'}</Text>
-//           <FlatList 
-//             data={categoria}
-//             keyExtractor={(item, index) => String(item.idCategoria)}
-//             renderItem={({item}) => <ListCategoria categoria={item} />}
-//             horizontal={true}
-//             // onEndReached={getDadosCategoria}
-//             // onEndReachedThreshold={0.1}
-//             // ListFooterComponent={ <FooterList load={loading}/>}
-//           />
-//           {/* <ScrollView style={styles.scroll_categorias} horizontal={true}>
-//             {categoria.map((categoria, indice) => (
-//               <TouchableOpacity
-//                 key={indice}
-//                 onPress={() =>
-//                   console.log(
-//                     `Categoria ${categoria.nomeCategoria} foi clicada`,
-//                   )
-//                 }
-//                 style={styles.botao_categoria}>
-//                 <View style={styles.view_itens_categoria}>
-//                   <Text style={styles.texto_nome_categoria}>
-//                     {categoria.nomeCategoria}
-//                   </Text>
-//                 </View>
-//               </TouchableOpacity>
-//             ))}
-//           </ScrollView> */}
-//           <Text style={styles.titulo_secao}>{'CardÃ¡pio'}</Text>
-
-//           <FlatList
-//             data={produtos}
-//             keyExtractor={(item, index) => String(item.idProduto)}
-//             renderItem={({item}) => <ListProduto produtos={item} />}
-//             horizontal={true}
-//             // onEndReached={getDadosCategoria}
-//             // onEndReachedThreshold={0.1}
-//             // ListFooterComponent={ <FooterList load={loading}/>}
-//           />
-//           {/* <ScrollView horizontal={true}>
-//             {produtos.map((produto, indice) => (
-//               <TouchableOpacity key={indice}>
-//                 <CardProduto dados={produto} />
-//               </TouchableOpacity>
-//             ))}
-//           </ScrollView> */}
-//           <Text style={styles.titulo_secao}>{'Mais vendido'}</Text>
-//           <Card containerStyle={styles.card_grande}>
-//             <Card.Image
-//               style={styles.imagens_cards}
-//               source={require('../../assets/picanha.jpg')}
-//             />
-//             <Card.Divider />
-//             <Card.Title style={styles.titulo_card}>Picanha</Card.Title>
-//             <Text style={styles.descricao_card}>Carne de churrasco!</Text>
-//           </Card>
-//         </View>
-//       )}
-//     </ScrollView>
-//   );
-// };
 
 // function FooterList({load}) {
 //   if (!load) return null;

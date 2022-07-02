@@ -20,9 +20,7 @@ const Produto = ({route, navigation}) => {
   return (
     <View style={styles.container}>
       <View>
-        <Text style={styles.container_imagem}>
-          {dadosDoProduto.imagemProduto}
-        </Text>
+        <Image style={styles.container_imagem} source={{uri:dadosDoProduto.imagemProduto}}/>
       </View>
       <View style={styles.container_produto}>
         <Text>{dadosDoProduto.nomeProduto}</Text>
