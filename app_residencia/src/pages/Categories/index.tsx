@@ -1,14 +1,20 @@
 import React from "react";
-import { StyleSheet, View } from "react-native";
+import { StatusBar, StyleSheet, View } from "react-native";
 import { Text } from "react-native-elements";
 
 const Categories = () => {
     return (
+        <>
+        <StatusBar
+        barStyle="light-content"
+        backgroundColor={styles.container.backgroundColor}
+        />
         <View style={styles.container}>
             <Text>
             
             </Text>
         </View>
+        </>
     )
 }
 

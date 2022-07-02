@@ -5,6 +5,7 @@ import {
   View,
   TouchableOpacity,
   ActivityIndicator,
+  StatusBar,
 } from 'react-native';
 import {Button, Card, Text} from 'react-native-elements';
 import {FlatList, TextInput} from 'react-native-gesture-handler';
@@ -25,7 +26,6 @@ const Home = ({navigation}) => {
 
   const [text, setText] = useState('');
   const pesquisar = usePesquisar();
-
 
   useEffect(() => {
     getDadosCategoria();
@@ -97,6 +97,11 @@ const Home = ({navigation}) => {
   }
 
   return (
+    <>
+    <StatusBar
+    barStyle="light-content"
+    backgroundColor={styles.container.backgroundColor}
+    />
     <ScrollView style={styles.container}>
       <BarraPesquisa navigation={navigation} />
       <FlatList
@@ -135,6 +140,7 @@ const Home = ({navigation}) => {
       </View>
 
     </ScrollView>
+    </>
   );
 };
 

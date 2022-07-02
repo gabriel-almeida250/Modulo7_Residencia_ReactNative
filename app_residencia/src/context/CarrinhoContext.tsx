@@ -1,4 +1,4 @@
-import React, {Children, createContext, useContext} from 'react';
+import React, { createContext } from 'react';
 import Realm from 'realm';
 
 export const CarrinhoContext = createContext({});
@@ -53,12 +53,21 @@ export const CarrinhoProvider= ({children}) => {
     console.log(JSON.stringify(realm_carrinho.objects('Produto')));
   };
 
+  const removerItemProduto = (_id) => {
+    realm_carrinho.write(() =>
+      realm_carrinho.delete(
+        realm_carrinho.objects('Produto').filter(produto => produto.id_produto == _id),
+      ),
+    )
+  }
+
   return (
     <CarrinhoContext.Provider
       value={{
         listarProdutos,
         contaQuantidadeProdutos,
         adicionarProduto,
+        removerItemProduto,
       }}>
       {children}
     </CarrinhoContext.Provider>

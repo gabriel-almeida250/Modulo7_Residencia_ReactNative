@@ -1,5 +1,5 @@
-import React, {useState, useContext} from 'react';
-import {View, StyleSheet, Alert, TouchableWithoutFeedback, Keyboard, FlatList} from 'react-native';
+import React, {useState, useContext, useEffect} from 'react';
+import {View, StyleSheet, Alert, TouchableWithoutFeedback, Keyboard, FlatList, BackHandler, StatusBar} from 'react-native';
 import {Text, Input, Icon, Button} from 'react-native-elements';
 import AppLoader from '../../components/AppLoader';
 import { AutenticacaoContext } from '../../context/AutenticacaoContext';
@@ -8,10 +8,14 @@ const Login = ({navigation}) => {
   const [email, setEmail] = useState('');
   const [senha, setSenha] = useState('');
   const [loading, setLoading] = useState(false)
-  
-
 
   const { login } = useContext(AutenticacaoContext);
+
+  useEffect(() =>{
+    BackHandler.addEventListener('hardwareBackPress', () =>{
+      return true
+    })
+  }, [])
 
   const handleLogin = async (email:string, senha:string) => {
     setLoading(true)
@@ -37,6 +41,10 @@ const Login = ({navigation}) => {
 
   return (
     <>
+     <StatusBar 
+        barStyle="light-content"
+        backgroundColor={styles.container.backgroundColor}
+        />
     <View style={styles.container}>
       <Text style={styles.texto_entrada}>{'Bem-vindo'}</Text>
       <Input

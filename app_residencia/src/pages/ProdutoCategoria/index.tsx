@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from 'react';
-import { ActivityIndicator, FlatList, StyleSheet, Text, View } from 'react-native';
+import { ActivityIndicator, FlatList, StatusBar, StyleSheet, Text, View } from 'react-native';
 import { Card } from 'react-native-elements';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import AxiosInstance from '../../api/AxiosInstance';
@@ -41,15 +41,6 @@ export function ProdutoCategoria({route}) {
     });
   }
 
-  function redirectProduto() {
-    console.log('Entrou');
-    // navigation.navigate({
-    //   name: 'ProdutoScreen',
-    //   params: {
-    //     produto: produto,
-    //   },
-    // });
-  }
   function ListProduto( {produto} ){
     
     return (
@@ -82,6 +73,11 @@ export function ProdutoCategoria({route}) {
 
 
   return (
+    <>
+    <StatusBar
+        barStyle="light-content"
+        backgroundColor={styles.container.backgroundColor}
+        />
     <View style={styles.container}>
       <Text>{pesquisar.pesquisa.nomeCategoria}</Text>
       {!semProduto &&(
@@ -102,6 +98,7 @@ export function ProdutoCategoria({route}) {
           </View>
         )}
     </View>
+    </>
   );
 }
 

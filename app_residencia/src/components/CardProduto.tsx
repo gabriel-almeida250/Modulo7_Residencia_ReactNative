@@ -1,7 +1,6 @@
 import React from 'react';
 import {Card, Text} from 'react-native-elements';
 import {StyleSheet} from 'react-native';
-import { ProdutoType } from '../models/@types/ProdutoTypes';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 
 const CardProduto = (props:any) => {
@@ -13,7 +12,7 @@ const CardProduto = (props:any) => {
     onPress={()=>{
       navigation.navigate({name:'ProdutoScreen', params:{
         dadosDoProduto: dadosDoProduto
-      }})
+      }}) 
     }}
     >
     <Card containerStyle={styles.card_style}>
